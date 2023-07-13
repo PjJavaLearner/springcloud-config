@@ -1,0 +1,40 @@
+server:
+  port: 1042
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1010/eureka/
+  instance:
+    prefer-ip-address: true #使用ip地址进行注册
+    instance-id: pay-server:1040	#实例ID
+spring:
+  application:
+    name: pay-server
+
+user-server:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+    ReadTimeout: 1000
+    SocketTimeout: 1000
+    ConnectTimeout: 1000
+feign:
+  compression:
+    request:
+      enabled: true
+      min-request-size: 1024 #最小阈值，小于这个不压缩
+      mime-types: text/xml,application/xml,application/json #压缩哪些类型的数据
+    response:
+      enabled: true
+  hystrix:
+    enabled: true #开启熔断支持
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 6000   #hystrix超时时间
+logging:
+  level:
+    cn.itsource.feignclient.UserFeignClient: debug
